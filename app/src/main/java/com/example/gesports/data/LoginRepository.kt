@@ -1,3 +1,4 @@
+/*
 package com.example.gesports.data
 
 import com.example.gesports.models.User
@@ -19,4 +20,4 @@ object LoginRepository {
 
     fun obtenerUsuarios(): List<User> = usuarios
 
-}
+}*/

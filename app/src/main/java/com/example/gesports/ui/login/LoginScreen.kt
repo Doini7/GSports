@@ -3,14 +3,13 @@ package com.example.gesports.ui.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -23,19 +22,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.gesports.R
-import com.example.gesports.domain.LoginLogic
+import com.example.gesports.models.User
+import com.example.gesports.models.UserRoles
 import com.example.gesports.ui.components.SportTextField
+import com.example.gesports.ui.login.backend.ges_user.GesUserViewModel
 import com.example.gesports.ui.login.components.LogoIcon
 import com.example.gesports.ui.login.components.RoundedButton
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
-    val logic = remember { LoginLogic() }
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf("") }
+fun LoginScreen(navController: NavHostController , viewModel: GesUserViewModel) {
+    //val logic = remember { LoginLogic() }
+    var username by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    //var error by rememberSaveable { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
+
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -130,16 +135,44 @@ fun LoginScreen(navController: NavHostController) {
             RoundedButton(
                 text = "Iniciar sesión",
                 onClick = {
-                    try {
-                        val user = logic.comprobarLogin(username, password)
-                        navController.navigate("home/${user.nombre}")
-                    } catch (e: IllegalArgumentException) {
-                        error = e.message.toString()
+                    error = ""
+                    scope.launch {
+                        viewModel.login(username, password)
+                        val user = viewModel.loginResult.value
+                        val loginError = viewModel.loginError.value
+                        if (user != null) {
+                            val route = UserRoles.routes[user.rol] ?: "login"
+                            val finalRoute = if (route == "home") "home/${user.nombre}" else route
+                            navController.navigate(finalRoute) {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        } else if (loginError.isNotEmpty()) {
+                            error = loginError
+                        }
                     }
                 }
+
+
+                    /*                    try {
+                                            val user = logic.comprobarLogin(username, password)
+                                            val route = UserRoles.routes[user.rol] ?: "login"
+
+                                            val finalRoute =
+                                                if (route == "home") {
+                                                    "home/${user.nombre}"
+                                                } else {
+                                                    route
+                                                }
+                                            navController.navigate(finalRoute) {
+                                                popUpTo("login") { inclusive = true }
+                                            }
+                                        } catch (e: IllegalArgumentException) {
+                                            error = e.message.toString()
+                                        }*/
+
+
+
             )
-
-
             Spacer(Modifier.height(16.dp))
             Row {
                 Text(

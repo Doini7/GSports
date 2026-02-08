@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "nombre": "Ana García López",
+    "email": "ana.garcia@club.es",
+    "password": "1234",
+    "rol": "Administrador deportivo"
+  },
+  {
+    "id": 2,
+    "nombre": "Pedro Martínez Sánchez",
+    "email": "pedro.martinez@club.es",
+    "password": "1234",
+    "rol": "Entrenador"
+  },
+  {
+    "id": 3,
+    "nombre": "Laura Fernández Ruiz",
+    "email": "laura.fernandez@club.es",
+    "password": "1234",
+    "rol": "Jugador"
+  },
+  {
+    "id": 4,
+    "nombre": "Luis Rodríguez Gómez",
+    "email": "luis.rodriguez@club.es",
+    "password": "1234",
+    "rol": "Árbitro"
+  },
+  {
+    "id": 5,
+    "nombre": "María López Navarro",
+    "email": "maria.lopez@club.es",
+    "password": "1234",
+    "rol": "Jugador"
+  }
+]

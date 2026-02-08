@@ -19,7 +19,12 @@ fun HomeScreen(navController: NavController, nombre: String?) {
     ) {
         Text("Bienvenido/a, $nombre", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(24.dp))
-        Button(onClick = { navController.popBackStack() }) {
+        Button(onClick = {
+            navController.navigate("login") {
+                popUpTo("login") { inclusive = true }
+                launchSingleTop = true
+            }
+        }) {
             Text("Cerrar sesión")
         }
     }

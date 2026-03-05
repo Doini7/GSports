@@ -4,14 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
-@Entity(tableName = "usuarios")
+@Entity(tableName = "teams")
 @Serializable
-data class User (
+data class Team(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val email: String,
-    val password: String,
-    val role: String,
-    val equipoId: Int? = null,
-    val activo: Boolean = true,
+    val sport: String,
 )

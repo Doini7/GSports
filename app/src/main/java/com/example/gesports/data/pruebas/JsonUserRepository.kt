@@ -1,13 +1,5 @@
-package com.example.gesports.data
+package com.example.gesports.data.pruebas
 
-import android.content.Context
-import android.util.Log
-import com.example.gesports.models.User
-import com.example.gesports.repository.UserRepository
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.decodeFromString
-import java.io.File
 /*
 class JsonUserRepository(private val context: Context): UserRepository {
     private val TAG = "Fichero"

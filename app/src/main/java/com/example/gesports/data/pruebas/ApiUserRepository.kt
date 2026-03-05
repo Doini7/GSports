@@ -1,7 +1,5 @@
-package com.example.gesports.data
+package com.example.gesports.data.pruebas
 
-import com.example.gesports.models.User
-import com.example.gesports.repository.UserRepository
 /*
 class ApiUserRepository: UserRepository {
     override suspend fun getAllUsers(): List<User> {

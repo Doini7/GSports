@@ -20,9 +20,9 @@ interface UserDao {
     suspend fun insertAll(users: List<User>)
 
     // READ
-    @Query("SELECT * FROM usuarios ORDER BY nombre ASC")
+    @Query("SELECT * FROM usuarios ORDER BY name ASC")
     fun getAll(): Flow<List<User>>
-    @Query("SELECT * FROM usuarios WHERE rol = :role ORDER BY nombre ASC")
+    @Query("SELECT * FROM usuarios WHERE role = :role ORDER BY name ASC")
     fun getByRole(role: String): Flow<List<User>>
     @Query("SELECT * FROM usuarios WHERE id = :id LIMIT 1")
     suspend fun getById(id: Int): User?

@@ -1,4 +1,4 @@
-package com.example.gesports.ui.login
+package com.example.gesports.ui.login.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -22,10 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.gesports.R
-import com.example.gesports.models.User
 import com.example.gesports.models.UserRoles
 import com.example.gesports.ui.components.SportTextField
-import com.example.gesports.ui.login.backend.ges_user.GesUserViewModel
+import com.example.gesports.ui.login.backend.ges_user.usuario.GesUserViewModel
 import com.example.gesports.ui.login.components.LogoIcon
 import com.example.gesports.ui.login.components.RoundedButton
 import kotlinx.coroutines.launch
@@ -33,10 +32,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavHostController , viewModel: GesUserViewModel) {
-    //val logic = remember { LoginLogic() }
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    //var error by rememberSaveable { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf("") }
 
@@ -136,41 +133,19 @@ fun LoginScreen(navController: NavHostController , viewModel: GesUserViewModel) 
                 text = "Iniciar sesión",
                 onClick = {
                     error = ""
-                    scope.launch {
-                        viewModel.login(username, password)
-                        val user = viewModel.loginResult.value
-                        val loginError = viewModel.loginError.value
+                    viewModel.login(username, password) { user ->
                         if (user != null) {
-                            val route = UserRoles.routes[user.rol] ?: "login"
-                            val finalRoute = if (route == "home") "home/${user.nombre}" else route
+                            val route = UserRoles.routes[user.role] ?: "login"
+                            val finalRoute = if (route == "home") "home/${user.name}" else route
+
                             navController.navigate(finalRoute) {
                                 popUpTo("login") { inclusive = true }
                             }
-                        } else if (loginError.isNotEmpty()) {
-                            error = loginError
+                        } else {
+                            error = viewModel.loginError.value
                         }
                     }
                 }
-
-
-                    /*                    try {
-                                            val user = logic.comprobarLogin(username, password)
-                                            val route = UserRoles.routes[user.rol] ?: "login"
-
-                                            val finalRoute =
-                                                if (route == "home") {
-                                                    "home/${user.nombre}"
-                                                } else {
-                                                    route
-                                                }
-                                            navController.navigate(finalRoute) {
-                                                popUpTo("login") { inclusive = true }
-                                            }
-                                        } catch (e: IllegalArgumentException) {
-                                            error = e.message.toString()
-                                        }*/
-
-
 
             )
             Spacer(Modifier.height(16.dp))

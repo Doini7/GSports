@@ -1,4 +1,4 @@
-package com.example.gesports.ui.login.screens
+package com.example.gesports.ui.login.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import com.example.gesports.R
 import com.example.gesports.models.User
 import com.example.gesports.ui.components.SportTextField
-import com.example.gesports.ui.login.backend.ges_user.GesUserViewModel
+import com.example.gesports.ui.login.backend.ges_user.usuario.GesUserViewModel
 import com.example.gesports.ui.login.components.RoundedButton
 import kotlinx.coroutines.launch
 
@@ -43,7 +43,6 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -102,7 +101,7 @@ fun RegisterScreen(
                 onClick = {
                     error = ""
 
-                    // Validaciones básicas
+                    // 1. Validaciones básicas
                     if (username.isBlank() || email.isBlank() || password.isBlank() || repeatPassword.isBlank()) {
                         error = "Rellena todos los campos."
                         return@RoundedButton
@@ -112,28 +111,39 @@ fun RegisterScreen(
                         return@RoundedButton
                     }
 
-                    val nuevo = User(
+                    // 2. Crear objeto User coincidiendo con tu Data Class actual
+                    val nuevoUsuario = User(
                         id = 0,
-                        nombre = username,
+                        name = username,
                         email = email,
                         password = password,
-                        rol = "JUGADOR" // rol por defecto en registro
+                        role = "admin_deportivo",
+                        equipoId = null,
+                        activo = true,
                     )
 
-                    // Guardar en Room
+                    // 3. Guardar en Room usando el ViewModel
                     scope.launch {
-                        viewModel.addUser(nuevo)
-                        // ir a login
-                        navController.navigate("login") {
-                            popUpTo("register") { inclusive = true }
+                        try {
+                            viewModel.addUser(nuevoUsuario)
+                            // Ir a login tras éxito
+                            navController.navigate("login") {
+                                popUpTo("register") { inclusive = true }
+                            }
+                        } catch (e: Exception) {
+                            error = "Error al registrar: ${e.message}"
                         }
                     }
                 }
             )
 
             if (error.isNotEmpty()) {
-                Spacer(Modifier.height(8.dp))
-                Text(text = error, color = MaterialTheme.colorScheme.error)
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = error,
+                    color = Color.Yellow, // Se ve mejor sobre fondos oscuros
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }
